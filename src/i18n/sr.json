@@ -1,0 +1,142 @@
+{
+  "app": {
+    "title": "Ski Maniaci",
+    "errorTitle": "Nešto je pošlo naopako",
+    "errorBody": "Došlo je do neočekivane greške. Pokušajte ponovo.",
+    "retry": "Pokušaj ponovo"
+  },
+  "navigation": {
+    "home": "Početna",
+    "offers": "Ponude",
+    "favorites": "Omiljeno",
+    "login": "Prijava",
+    "contacts": "Kontakti",
+    "terms": "Uslovi korišćenja",
+    "privacy": "Pravila privatnosti",
+    "account": "Moj nalog",
+    "logout": "Odjava",
+    "language": "Jezik"
+  },
+  "offers": {
+    "title": "Ponude",
+    "empty": "Još nema ponuda.",
+    "emptyMessage": "Proverite kasnije za nove skijaške ponude!",
+    "imageAlt": "Slika skijaške ponude",
+    "detailTitle": "Ponuda",
+    "favoriteAlt": "Uključi ili isključi omiljeno",
+    "loading": "Učitavanje…",
+    "loadError": "Greška pri učitavanju ponuda",
+    "retry": "Pokušaj ponovo",
+    "refresh": "Osveži ponude",
+    "refreshing": "Osvežavanje…",
+    "syncFailed": "Sinhronizacija nije uspela. Prikazuju se prethodno učitane ponude. Razlog: {{reason}}"
+  },
+  "detail": {
+    "title": "Detalji ponude",
+    "category": "Kategorija",
+    "location": "Lokacija",
+    "dates": "Datumi",
+    "price": "Cena",
+    "description": "Opis",
+    "membershipTitle": "Potrebno članstvo",
+    "membershipMessage": "Da biste videli više informacija, kao što su cena, dostupnost i druge detalje, morate biti član Ski kluba. Kontaktirajte kancelariju kluba da biste saznali kako da postanete član.",
+    "callToJoin": "Kako da postanete član",
+    "membershipContact": "Za informacije o učlanjenju pozovite kancelariju kluba na broj:",
+    "callNow": "Pozovi",
+    "close": "Zatvori",
+    "datesRange": "{{start}} - {{end}}",
+    "placeholder": "Detalji ponude biće dostupni u narednoj fazi."
+  },
+  "contact": {
+    "title": "Kontaktirajte nas",
+    "email": "E-pošta",
+    "phone": "Telefon",
+    "website": "Veb-sajt",
+    "callNumber": "+381 600 218 657",
+    "websiteUrl": "https://skimanijaci.com/"
+  },
+  "price": {
+    "currency": "Valuta",
+    "eur": "Evro (€)",
+    "rsd": "Srpski dinar (RSD)",
+    "comingSoon": "Uskoro",
+    "past": "PAST"
+  },
+  "availability": {
+    "label": "Dostupnost",
+    "places": "Slobodna mesta",
+    "deadline": "Rok za prijavu",
+    "available": "DOSTUPNO",
+    "soldOut": "RASPRODATO",
+    "notAvailable": "Nije dostupno"
+  },
+  "favorites": {
+    "empty": "Još nema omiljenih",
+    "emptyTitle": "Vaša lista omiljenih je usamljena!",
+    "emptyMessage": "Dodirnite zvezdicu na bilo kojoj ponudi da je sačuvate ovde.",
+    "loginRequired": "Prijavite se da biste dodali ponude u omiljene.",
+    "loginOrJoinRequired": "Prijavite se ili postanite član da biste dodali ponude u omiljene."
+  },
+  "filters": {
+    "title": "Filtriraj ponude",
+    "sortBy": "Sortiraj po",
+    "sortDate": "Po datumu",
+    "sortPriceLowHigh": "Po ceni - od niže ka višoj",
+    "sortPriceHighLow": "Po ceni - od više ka nižoj",
+    "dateRange": "Opseg datuma",
+    "fromDate": "Od datuma",
+    "toDate": "Do datuma",
+    "priceRange": "Opseg cene",
+    "minPrice": "Minimalna cena",
+    "maxPrice": "Maksimalna cena",
+    "options": "Opcije",
+    "favoritesOnly": "Samo omiljeno",
+    "availableOnly": "Samo dostupno",
+    "clear": "Očisti",
+    "apply": "Primeni",
+    "clearAll": "Očisti sve",
+    "from": "Od: {{date}}",
+    "to": "Do: {{date}}",
+    "price": "Cena: {{price}}"
+  },
+  "auth": {
+    "invalidCredentials": "Neispravno korisničko ime, lozinka ili neaktivan nalog",
+    "serverUnreachable": "Server nije dostupan. Proverite internet vezu i pokušajte ponovo.",
+    "required": "Prijavite se da biste pristupili ovoj stranici",
+    "requiredField": "Ovo polje je obavezno",
+    "invalidEmail": "Unesite ispravnu adresu e-pošte",
+    "passwordPolicy": "Minimum 5 znakova, jedno veliko slovo i jedan specijalni znak",
+    "usernameExists": "Korisničko ime već postoji",
+    "emailExists": "E-pošta već postoji",
+    "currentPassword": "Trenutna lozinka",
+    "newPassword": "Nova lozinka",
+    "currentPasswordRequired": "Unesite trenutnu lozinku da biste je promenili",
+    "currentPasswordIncorrect": "Trenutna lozinka nije ispravna",
+    "username": "Korisničko ime",
+    "password": "Lozinka",
+    "loginButton": "Prijavi se",
+    "loggingIn": "Prijavljivanje…"
+  },
+  "account": {
+    "title": "Moj nalog",
+    "details": "Podaci naloga",
+    "name": "Ime",
+    "surname": "Prezime",
+    "email": "E-pošta",
+    "username": "Korisničko ime",
+    "cancel": "Otkaži",
+    "save": "Sačuvaj izmene",
+    "saved": "Vaš nalog je ažuriran",
+    "saveFailed": "Nije moguće sačuvati izmene naloga",
+    "deleteTitle": "Brisanje naloga",
+    "deleteDescription": "Brisanjem naloga trajno se uklanjaju vaš profil i omiljene ponude. Ova radnja se ne može poništiti.",
+    "deleteButton": "Obriši moj nalog",
+    "confirmTitle": "Obrisati nalog?",
+    "confirmMessage": "Da li ste sigurni da želite trajno da obrišete svoj nalog? Ova radnja se ne može poništiti.",
+    "deleted": "Vaš nalog je obrisan",
+    "deleteFailed": "Nije moguće obrisati vaš nalog. Razlog: {{reason}}"
+  },
+  "placeholders": {
+    "phase": "Ovaj ekran biće implementiran u narednoj fazi."
+  }
+}

@@ -1,0 +1,142 @@
+{
+  "app": {
+    "title": "Ski Maniacs",
+    "errorTitle": "Something went wrong",
+    "errorBody": "An unexpected error occurred. Please try again.",
+    "retry": "Try again"
+  },
+  "navigation": {
+    "home": "Home",
+    "offers": "Offers",
+    "favorites": "Favorites",
+    "login": "Log in",
+    "contacts": "Contacts",
+    "terms": "Terms & Conditions",
+    "privacy": "Privacy Policy",
+    "account": "My Account",
+    "logout": "Log out",
+    "language": "Language"
+  },
+  "offers": {
+    "title": "Offers",
+    "empty": "No offers yet.",
+    "emptyMessage": "Check back later for new ski trip offers!",
+    "imageAlt": "Ski trip offer image",
+    "detailTitle": "Offer",
+    "favoriteAlt": "Toggle favorite",
+    "loading": "Loading…",
+    "loadError": "Error loading offers",
+    "retry": "Retry",
+    "refresh": "Refresh offers",
+    "refreshing": "Refreshing…",
+    "syncFailed": "Sync failed. Showing previously loaded offers. Reason: {{reason}}"
+  },
+  "detail": {
+    "title": "Offer details",
+    "category": "Category",
+    "location": "Location",
+    "dates": "Dates",
+    "price": "Price",
+    "description": "Description",
+    "membershipTitle": "Membership required",
+    "membershipMessage": "To see more information such as price, availability and other details, you need to be a member of the Ski Club. Contact the club office to learn how to become a member.",
+    "callToJoin": "How to get membership",
+    "membershipContact": "Contact the club office at this number to ask about joining:",
+    "callNow": "Call",
+    "close": "Close",
+    "datesRange": "{{start}} - {{end}}",
+    "placeholder": "Offer details will be available in the next phase."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "email": "Email",
+    "phone": "Phone",
+    "website": "Website",
+    "callNumber": "+381 600 218 657",
+    "websiteUrl": "https://skimanijaci.com/"
+  },
+  "price": {
+    "currency": "Currency",
+    "eur": "Euro (€)",
+    "rsd": "Serbian Dinar (RSD)",
+    "comingSoon": "Coming Soon",
+    "past": "PAST"
+  },
+  "availability": {
+    "label": "Availability",
+    "places": "Available places",
+    "deadline": "Application deadline",
+    "available": "AVAILABLE",
+    "soldOut": "SOLD OUT",
+    "notAvailable": "Not Available"
+  },
+  "favorites": {
+    "empty": "No favorites yet",
+    "emptyTitle": "Your Favorite List is Lonely!",
+    "emptyMessage": "Tap the star on any offer to save it here.",
+    "loginRequired": "Please log in to add offers to your favorites.",
+    "loginOrJoinRequired": "Please log in or become a member to add offers to your favorites."
+  },
+  "filters": {
+    "title": "Filter Offers",
+    "sortBy": "Sort By",
+    "sortDate": "By date",
+    "sortPriceLowHigh": "By Price - Low to High",
+    "sortPriceHighLow": "By Price - High to Low",
+    "dateRange": "Date Range",
+    "fromDate": "From Date",
+    "toDate": "To Date",
+    "priceRange": "Price Range",
+    "minPrice": "Min Price",
+    "maxPrice": "Max Price",
+    "options": "Options",
+    "favoritesOnly": "Favorites Only",
+    "availableOnly": "Available Only",
+    "clear": "Clear",
+    "apply": "Apply",
+    "clearAll": "Clear All",
+    "from": "From: {{date}}",
+    "to": "To: {{date}}",
+    "price": "Price: {{price}}"
+  },
+  "auth": {
+    "invalidCredentials": "Invalid username, password, or inactive account",
+    "serverUnreachable": "Unable to reach the server. Check your internet connection and try again.",
+    "required": "Please log in to access this page",
+    "requiredField": "This field is required",
+    "invalidEmail": "Enter a valid email address",
+    "passwordPolicy": "Min 5 chars, one capital letter, one special character",
+    "usernameExists": "Username already exists",
+    "emailExists": "Email already exists",
+    "currentPassword": "Current password",
+    "newPassword": "New password",
+    "currentPasswordRequired": "Enter your current password to change it",
+    "currentPasswordIncorrect": "Current password is incorrect",
+    "username": "Username",
+    "password": "Password",
+    "loginButton": "Log in",
+    "loggingIn": "Logging in…"
+  },
+  "account": {
+    "title": "My Account",
+    "details": "Account details",
+    "name": "First name",
+    "surname": "Last name",
+    "email": "Email",
+    "username": "Username",
+    "cancel": "Cancel",
+    "save": "Save changes",
+    "saved": "Your account has been updated",
+    "saveFailed": "Unable to save your account changes",
+    "deleteTitle": "Delete account",
+    "deleteDescription": "Deleting your account will permanently remove your profile and favorites. This action cannot be undone.",
+    "deleteButton": "Delete my account",
+    "confirmTitle": "Delete account?",
+    "confirmMessage": "Are you sure you want to permanently delete your account? This action cannot be undone.",
+    "deleted": "Your account has been deleted",
+    "deleteFailed": "Unable to delete your account. Reason: {{reason}}"
+  },
+  "placeholders": {
+    "phase": "This screen will be implemented in a later phase."
+  }
+}

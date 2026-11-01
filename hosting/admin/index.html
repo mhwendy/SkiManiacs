@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src https: http://localhost:*; base-uri 'none'; form-action 'none'"
+    />
+    <title>SkiManiacs Admin</title>
+    <style>
+      body{font-family:system-ui,sans-serif;margin:0;color:#212121;background:#f5f5f5}
+      header{background:#0B1736;color:#fff;padding:12px 24px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+      header h1{font-size:1.2rem;margin:0;flex:1}
+      main{max-width:1000px;margin:0 auto;padding:16px 24px}
+      nav button,button{font:inherit;min-height:40px;padding:6px 14px;border-radius:6px;border:1px solid #0B1736;background:#fff;color:#0B1736;cursor:pointer}
+      nav button[aria-current="page"],button.primary{background:#0B1736;color:#fff}
+      button.danger{border-color:#C1272D;color:#C1272D}
+      label{display:block;margin:10px 0 2px;font-weight:600}
+      input,textarea,select{font:inherit;width:100%;box-sizing:border-box;padding:8px;border:1px solid #8A8F98;border-radius:6px}
+      input[type=checkbox]{width:auto;min-height:0}
+      .check{display:flex;gap:8px;align-items:center;margin-top:10px;font-weight:600}
+      .check label{margin:0}
+      table{border-collapse:collapse;width:100%;background:#fff}
+      th,td{text-align:left;padding:8px;border-bottom:1px solid #ddd;vertical-align:top}
+      .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 16px}
+      .card{background:#fff;padding:16px;border-radius:8px;margin:12px 0}
+      .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+      #status{padding:8px 12px;margin:8px 0;border-radius:6px;min-height:1.2em}
+      #status.error{background:#fde8e8;color:#8a1c1c}
+      #status.ok{background:#e6f4ea;color:#1e5b2f}
+      [hidden]{display:none!important}
+      :focus-visible{outline:3px solid #2196F3;outline-offset:2px}
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>SkiManiacs Admin</h1>
+      <nav id="tabs" aria-label="Sections" hidden>
+        <button type="button" data-tab="offers">Offers</button>
+        <button type="button" data-tab="import">CSV import</button>
+        <button type="button" data-tab="users">Users</button>
+      </nav>
+      <button type="button" id="logout" hidden>Log out</button>
+    </header>
+    <main>
+      <div id="status" role="status" aria-live="polite"></div>
+      <section id="login" class="card">
+        <h2>Admin login</h2>
+        <form id="login-form">
+          <label for="login-username">Username</label>
+          <input id="login-username" autocomplete="username" required />
+          <label for="login-password">Password</label>
+          <input id="login-password" type="password" autocomplete="current-password" required />
+          <div class="row"><button class="primary" type="submit">Log in</button></div>
+        </form>
+      </section>
+      <section id="view" hidden></section>
+    </main>
+    <script src="config.js"></script>
+    <script src="admin.js"></script>
+  </body>
+</html>
