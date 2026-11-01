@@ -6,7 +6,7 @@
     <meta name="robots" content="noindex" />
     <meta
       http-equiv="Content-Security-Policy"
-      content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; connect-src https: http://localhost:*; base-uri 'none'; form-action 'none'"
+        content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src https: http://localhost:*; connect-src https: http://localhost:*; base-uri 'none'; form-action 'none'"
     />
     <title>SkiManiacs Admin</title>
     <style>
@@ -20,6 +20,10 @@
       label{display:block;margin:10px 0 2px;font-weight:600}
       input,textarea,select{font:inherit;width:100%;box-sizing:border-box;padding:8px;border:1px solid #8A8F98;border-radius:6px}
       input[type=checkbox]{width:auto;min-height:0}
+      .password-field{display:flex;align-items:center;gap:8px}
+      .password-field input{flex:1;min-width:0}
+      .password-toggle{flex:0 0 44px;width:44px;min-width:44px;padding:6px;display:grid;place-items:center}
+      .password-toggle svg{width:20px;height:20px;display:block}
       .check{display:flex;gap:8px;align-items:center;margin-top:10px;font-weight:600}
       .check label{margin:0}
       table{border-collapse:collapse;width:100%;background:#fff}
@@ -27,6 +31,14 @@
       .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 16px}
       .card{background:#fff;padding:16px;border-radius:8px;margin:12px 0}
       .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+      .image-slots{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:8px}
+      .image-slot{min-width:0;padding:12px;border:1px solid #ddd;border-radius:6px;background:#fff}
+      .image-preview,.image-placeholder{width:100%;height:160px;border-radius:4px}
+      .image-preview{display:block;object-fit:cover;background:#eee}
+      .image-placeholder{display:grid;place-items:center;box-sizing:border-box;padding:12px;border:1px dashed #8A8F98;background:#f0f0f0;color:#616161;text-align:center}
+      .image-url-editor{margin-top:8px}
+      .image-actions{display:flex;gap:8px;margin-top:8px}
+      .image-actions button{flex:1}
       #status{padding:8px 12px;margin:8px 0;border-radius:6px;min-height:1.2em}
       #status.error{background:#fde8e8;color:#8a1c1c}
       #status.ok{background:#e6f4ea;color:#1e5b2f}
@@ -52,13 +64,19 @@
           <label for="login-username">Username</label>
           <input id="login-username" autocomplete="username" required />
           <label for="login-password">Password</label>
-          <input id="login-password" type="password" autocomplete="current-password" required />
+          <div class="password-field">
+            <input id="login-password" type="password" autocomplete="current-password" required />
+            <button type="button" class="password-toggle" id="toggle-admin-password" aria-label="Show password" aria-pressed="false">
+              <svg id="admin-password-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.0625 12C3.732 7.944 7.523 5.5 12 5.5s8.268 2.444 9.9375 6.5c-1.6695 4.056-5.46 6.5-9.9375 6.5S3.732 16.056 2.0625 12Z"/><circle cx="12" cy="12" r="3"/></svg>
+              <svg id="admin-password-eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><path d="M3 3l18 18"/><path d="M10.6 10.6a2 2 0 0 0 2.8 2.8"/><path d="M9.9 5.2A10.7 10.7 0 0 1 12 5c4.5 0 8.3 2.4 10 7a11.8 11.8 0 0 1-3.1 4.2M6.2 6.2A12 12 0 0 0 2 12c1.7 4.6 5.5 7 10 7 1.1 0 2.1-.2 3.1-.5"/></svg>
+            </button>
+          </div>
           <div class="row"><button class="primary" type="submit">Log in</button></div>
         </form>
       </section>
       <section id="view" hidden></section>
     </main>
     <script src="config.js"></script>
-    <script src="admin.js"></script>
+    <script src="admin.js?v=4"></script>
   </body>
 </html>

@@ -17,6 +17,14 @@
     "logout": "Log out",
     "language": "Language"
   },
+  "drawer": {
+    "logoAlt": "Ski Maniacs logo",
+    "guestUser": "Not logged in",
+    "loggedInAs": "Logged in as: {{username}}",
+    "version": "Version {{version}}",
+    "languageSerbian": "Srpski (SRB)",
+    "languageEnglish": "English (ENG)"
+  },
   "offers": {
     "title": "Offers",
     "empty": "No offers yet.",
@@ -114,6 +122,8 @@
     "currentPasswordIncorrect": "Current password is incorrect",
     "username": "Username",
     "password": "Password",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
     "loginButton": "Log in",
     "loggingIn": "Logging in…"
   },

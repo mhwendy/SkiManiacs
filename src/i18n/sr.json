@@ -17,6 +17,14 @@
     "logout": "Odjava",
     "language": "Jezik"
   },
+  "drawer": {
+    "logoAlt": "Logo Ski Manijaci",
+    "guestUser": "Niste prijavljeni",
+    "loggedInAs": "Prijavljeni kao: {{username}}",
+    "version": "Verzija {{version}}",
+    "languageSerbian": "Srpski (SRB)",
+    "languageEnglish": "English (ENG)"
+  },
   "offers": {
     "title": "Ponude",
     "empty": "Još nema ponuda.",
@@ -114,6 +122,8 @@
     "currentPasswordIncorrect": "Trenutna lozinka nije ispravna",
     "username": "Korisničko ime",
     "password": "Lozinka",
+    "showPassword": "Prikaži lozinku",
+    "hidePassword": "Sakrij lozinku",
     "loginButton": "Prijavi se",
     "loggingIn": "Prijavljivanje…"
   },

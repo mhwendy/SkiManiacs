@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { Lucide } from '@react-native-vector-icons/lucide';
 import { ImageCarousel } from '@/components/ImageCarousel';
 import { formatPrice, isAvailable, localize } from '@/domain/offers';
 import type { Offer } from '@/domain/types';
@@ -70,9 +71,20 @@ export default function OfferDetailScreen() {
   );
   const dates = formatDates(offer);
 
-  const row = (label: string, value: string) => (
+  const row = (
+    label: string,
+    value: string,
+    icon?: 'tag' | 'map-pin' | 'calendar-days',
+  ) => (
     <View style={styles.row} key={label}>
-      <Text style={{ color: theme.textSecondary }}>{label}</Text>
+      <View style={styles.rowLabel}>
+        {icon && (
+          <View style={styles.rowIcon} accessible={false}>
+            <Lucide name={icon} size={20} color={theme.accentBlue} />
+          </View>
+        )}
+        <Text style={{ color: theme.textSecondary }}>{label}</Text>
+      </View>
       <Text style={[styles.value, { color: theme.textPrimary }]}>{value}</Text>
     </View>
   );
@@ -118,9 +130,9 @@ export default function OfferDetailScreen() {
           <Text style={[styles.title, { color: theme.textPrimary }]}>
             {localize(offer.title_sr, offer.title_en, language)}
           </Text>
-          {category !== '' && row(t('detail.category'), category)}
-          {location !== '' && row(t('detail.location'), location)}
-          {dates !== '' && row(t('detail.dates'), dates)}
+          {category !== '' && row(t('detail.category'), category, 'tag')}
+          {location !== '' && row(t('detail.location'), location, 'map-pin')}
+          {dates !== '' && row(t('detail.dates'), dates, 'calendar-days')}
 
           {member ? (
             <>
@@ -309,7 +321,14 @@ const styles = StyleSheet.create({
   hero: { position: 'relative', height: 240 },
   body: { padding: 16, gap: 8 },
   title: { fontSize: 22, fontWeight: '700', paddingRight: 56 },
-  row: { flexDirection: 'row', justifyContent: 'space-between', gap: 12 },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 12,
+  },
+  rowLabel: { flexDirection: 'row', alignItems: 'center', gap: 8 },
+  rowIcon: { width: 24, alignItems: 'center' },
   value: { flexShrink: 1, textAlign: 'right', fontWeight: '600' },
   priceCard: { padding: 12, borderRadius: 12, alignItems: 'center' },
   priceText: { color: colors.white, fontSize: 20, fontWeight: '700' },

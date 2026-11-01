@@ -9,7 +9,12 @@
   function h(tag, attrs, ...children) {
     const el = document.createElement(tag);
     for (const [key, value] of Object.entries(attrs || {})) {
-      if (key === 'onclick' || key === 'onchange' || key === 'onsubmit') {
+      if (
+        key === 'onclick' ||
+        key === 'onchange' ||
+        key === 'onerror' ||
+        key === 'onsubmit'
+      ) {
         el[key] = value;
       } else if (value === true) {
         el.setAttribute(key, '');
@@ -37,6 +42,7 @@
   };
 
   async function request(method, path, body, raw) {
+    const isFormData = body instanceof FormData;
     const send = () =>
       fetch(API + path, {
         method,
@@ -44,12 +50,17 @@
           ...(store.get('access') && {
             Authorization: 'Bearer ' + store.get('access'),
           }),
-          ...(body !== undefined && {
-            'Content-Type': raw ? 'text/csv' : 'application/json',
+          ...(raw && { 'Content-Type': 'text/csv' }),
+          ...(body !== undefined && !raw && !isFormData && {
+            'Content-Type': 'application/json',
           }),
         },
         body:
-          body === undefined ? undefined : raw ? body : JSON.stringify(body),
+          body === undefined
+            ? undefined
+            : raw || isFormData
+              ? body
+              : JSON.stringify(body),
       });
     let response;
     try {
@@ -87,6 +98,7 @@
 
   function logout() {
     store.clear();
+    setAdminPasswordVisible(false);
     $('login').hidden = false;
     view.hidden = true;
     $('tabs').hidden = true;
@@ -232,6 +244,211 @@
     );
   }
 
+  async function uploadOfferImage(slot, file) {
+    if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+      say('Choose a JPEG, PNG, or WebP image', 'error');
+      slot.fileInput.value = '';
+      return;
+    }
+    if (file.size === 0 || file.size > 9 * 1024 * 1024) {
+      say('Images must be smaller than 9 MB', 'error');
+      slot.fileInput.value = '';
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(file);
+    slot.preview.src = previewUrl;
+    slot.preview.hidden = false;
+    slot.placeholder.hidden = true;
+    slot.uploadButton.disabled = true;
+    slot.removeButton.disabled = true;
+    const saveButton = $('offer-save');
+    if (saveButton) saveButton.disabled = true;
+    say('Uploading image…');
+
+    try {
+      const body = new FormData();
+      body.append('image', file, file.name);
+      const result = await request('POST', '/admin/offers/images', body);
+      if (typeof result?.url !== 'string') {
+        throw new Error('Image upload did not return a URL');
+      }
+      slot.currentUrl = result.url;
+      slot.urlField.value = result.url;
+      slot.preview.src = result.url;
+      slot.uploadButton.textContent = 'Change picture';
+      slot.uploadButton.setAttribute(
+        'aria-label',
+        'Change picture ' + slot.index,
+      );
+      slot.removeButton.hidden = false;
+      say('Image uploaded', 'ok');
+    } catch (error) {
+      slot.preview.src = slot.currentUrl || '';
+      slot.preview.hidden = !slot.currentUrl;
+      slot.placeholder.hidden = !!slot.currentUrl;
+      slot.placeholder.textContent = slot.currentUrl
+        ? 'Image preview unavailable'
+        : 'Choose an image file';
+      say(error.message || 'Image upload failed', 'error');
+    } finally {
+      URL.revokeObjectURL(previewUrl);
+      slot.fileInput.value = '';
+      slot.uploadButton.disabled = false;
+      slot.removeButton.disabled = false;
+      if (saveButton) saveButton.disabled = false;
+    }
+  }
+
+  function imageManager(offer) {
+    const imageSlots = [];
+    const lastUsedIndex = IMAGE_FIELDS.reduce(
+      (last, key, index) => (offer[key] ? index : last),
+      -1,
+    );
+    const initialVisibleCount = Math.min(
+      IMAGE_FIELDS.length,
+      Math.max(1, lastUsedIndex + 2),
+    );
+    const list = h('div', { class: 'image-slots' });
+    let addButton;
+
+    const updateAddButton = () => {
+      addButton.disabled = !imageSlots.some((slot) => slot.element.hidden);
+    };
+
+    IMAGE_FIELDS.forEach((key, index) => {
+      const initialUrl = offer[key] || '';
+      const slot = { index: index + 1, currentUrl: initialUrl };
+      const slotElement = h('div', {
+        class: 'image-slot',
+        hidden: index >= initialVisibleCount,
+      });
+      const placeholder = h(
+        'div',
+        { class: 'image-placeholder', hidden: !!initialUrl },
+        'Choose an image file',
+      );
+      const preview = h('img', {
+        class: 'image-preview',
+        alt: 'Offer image ' + (index + 1),
+        src: initialUrl || null,
+        hidden: !initialUrl,
+        onerror: () => {
+          preview.hidden = true;
+          placeholder.textContent = 'Image preview unavailable';
+          placeholder.hidden = false;
+        },
+      });
+      const urlField = h('input', {
+        id: 'f-' + key,
+        type: 'hidden',
+        value: initialUrl,
+      });
+      const fileInput = h('input', {
+        type: 'file',
+        accept: 'image/jpeg,image/png,image/webp',
+        hidden: true,
+        'aria-label': 'Choose image file ' + (index + 1),
+        onchange: () => {
+          const file = fileInput.files?.[0];
+          if (file) void uploadOfferImage(slot, file);
+        },
+      });
+      const uploadButton = h(
+        'button',
+        {
+          type: 'button',
+          class: 'primary',
+          'aria-label': (initialUrl ? 'Change' : 'Choose') + ' picture ' + (index + 1),
+          onclick: () => fileInput.click(),
+        },
+        initialUrl ? 'Change picture' : 'Choose picture',
+      );
+      const removeButton = h(
+        'button',
+        {
+          type: 'button',
+          class: 'danger',
+          hidden: !initialUrl,
+          'aria-label': 'Remove picture ' + (index + 1),
+          onclick: () => {
+            urlField.value = '';
+            slot.currentUrl = '';
+            preview.removeAttribute('src');
+            preview.hidden = true;
+            placeholder.textContent = 'Choose an image file';
+            placeholder.hidden = false;
+            uploadButton.textContent = 'Choose picture';
+            uploadButton.setAttribute(
+              'aria-label',
+              'Choose picture ' + (index + 1),
+            );
+            removeButton.hidden = true;
+            slotElement.hidden = true;
+            updateAddButton();
+          },
+        },
+        'Remove picture',
+      );
+      Object.assign(slot, {
+        element: slotElement,
+        urlField,
+        fileInput,
+        preview,
+        placeholder,
+        uploadButton,
+        removeButton,
+      });
+
+      slotElement.append(
+        preview,
+        placeholder,
+        urlField,
+        fileInput,
+        h('div', { class: 'image-actions' }, uploadButton, removeButton),
+      );
+      list.append(slotElement);
+      imageSlots.push(slot);
+    });
+
+    addButton = h(
+      'button',
+      {
+        type: 'button',
+        class: 'primary',
+        onclick: () => {
+          const slot = imageSlots.find((image) => image.element.hidden);
+          if (!slot) return;
+          slot.element.hidden = false;
+          slot.urlField.value = '';
+          slot.currentUrl = '';
+          slot.uploadButton.textContent = 'Choose picture';
+          slot.uploadButton.setAttribute(
+            'aria-label',
+            'Choose picture ' + slot.index,
+          );
+          slot.removeButton.hidden = true;
+          slot.preview.removeAttribute('src');
+          slot.preview.hidden = true;
+          slot.placeholder.textContent = 'Choose an image file';
+          slot.placeholder.hidden = false;
+          slot.fileInput.click();
+          updateAddButton();
+        },
+      },
+      'Add picture',
+    );
+    updateAddButton();
+
+    return h(
+      'div',
+      {},
+      list,
+      h('div', { class: 'row' }, addButton),
+    );
+  }
+
   function offerForm(offer) {
     const o = offer || { currency: 'EUR' };
     const form = h(
@@ -282,13 +499,11 @@
         o.description_en || '',
       ),
       h('h3', {}, 'Images (up to 5, first is the cover)'),
-      IMAGE_FIELDS.map((key, i) =>
-        field('f-' + key, 'Image URL ' + (i + 1), 'url', o[key]),
-      ),
+      imageManager(o),
       h(
         'div',
         { class: 'row' },
-        h('button', { class: 'primary', type: 'submit' }, 'Save'),
+        h('button', { id: 'offer-save', class: 'primary', type: 'submit' }, 'Save'),
         h(
           'button',
           { type: 'button', onclick: () => guard(showOffers) },
@@ -594,6 +809,21 @@
     say('');
   };
 
+  function setAdminPasswordVisible(visible) {
+    $('login-password').type = visible ? 'text' : 'password';
+    $('toggle-admin-password').setAttribute('aria-pressed', String(visible));
+    $('toggle-admin-password').setAttribute(
+      'aria-label',
+      visible ? 'Hide password' : 'Show password',
+    );
+    $('admin-password-eye').hidden = visible;
+    $('admin-password-eye-off').hidden = !visible;
+  }
+
+  $('toggle-admin-password').onclick = () => {
+    setAdminPasswordVisible($('login-password').type === 'password');
+  };
+
   function enter() {
     $('login').hidden = true;
     view.hidden = false;
@@ -616,6 +846,7 @@
       store.set('refresh', data.refreshToken);
       store.set('username', data.user.username);
       $('login-password').value = '';
+      setAdminPasswordVisible(false);
       say('');
       enter();
     });

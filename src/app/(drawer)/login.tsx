@@ -7,7 +7,10 @@ import {
   StyleSheet,
   Text,
   TextInput,
+  View,
 } from 'react-native';
+import { Image } from 'expo-image';
+import { Lucide } from '@react-native-vector-icons/lucide';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { authErrorKey } from '@/features/auth/errors';
@@ -21,6 +24,7 @@ export default function LoginScreen() {
   const router = useRouter();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [passwordVisible, setPasswordVisible] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [touched, setTouched] = useState(false);
@@ -52,6 +56,12 @@ export default function LoginScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       style={styles.container}
     >
+      <Image
+        source={require('../../../assets/skimanijaci-logo.png')}
+        style={styles.logo}
+        contentFit="contain"
+        accessibilityLabel={t('drawer.logoAlt')}
+      />
       <TextInput
         accessibilityLabel={t('auth.username')}
         placeholder={t('auth.username')}
@@ -62,17 +72,42 @@ export default function LoginScreen() {
         onChangeText={setUsername}
         style={inputStyle}
       />
-      <TextInput
-        accessibilityLabel={t('auth.password')}
-        placeholder={t('auth.password')}
-        placeholderTextColor={theme.textHint}
-        secureTextEntry
-        autoCapitalize="none"
-        value={password}
-        onChangeText={setPassword}
-        onSubmitEditing={() => void submit()}
-        style={inputStyle}
-      />
+      <View
+        style={[
+          styles.passwordField,
+          {
+            borderColor: colors.neutralGray,
+            backgroundColor: theme.surface,
+          },
+        ]}
+      >
+        <TextInput
+          accessibilityLabel={t('auth.password')}
+          placeholder={t('auth.password')}
+          placeholderTextColor={theme.textHint}
+          secureTextEntry={!passwordVisible}
+          autoCapitalize="none"
+          value={password}
+          onChangeText={setPassword}
+          onSubmitEditing={() => void submit()}
+          style={[styles.passwordInput, { color: theme.textPrimary }]}
+        />
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t(
+            passwordVisible ? 'auth.hidePassword' : 'auth.showPassword',
+          )}
+          accessibilityState={{ selected: passwordVisible }}
+          onPress={() => setPasswordVisible((visible) => !visible)}
+          style={styles.passwordVisibilityButton}
+        >
+          <Lucide
+            name={passwordVisible ? 'eye-off' : 'eye'}
+            size={20}
+            color={theme.textSecondary}
+          />
+        </Pressable>
+      </View>
       {touched && missing && (
         <Text style={styles.error}>{t('auth.requiredField')}</Text>
       )}
@@ -99,11 +134,26 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, padding: 24, gap: 12, justifyContent: 'center' },
+  logo: { width: 120, height: 120, alignSelf: 'center', marginBottom: 8 },
   input: {
     borderWidth: 1,
     borderColor: colors.neutralGray,
     borderRadius: 8,
     padding: 12,
+  },
+  passwordField: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingRight: 4,
+  },
+  passwordInput: { flex: 1, minWidth: 0, padding: 12 },
+  passwordVisibilityButton: {
+    width: 44,
+    height: 44,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   error: { color: colors.accentRed },
   button: {

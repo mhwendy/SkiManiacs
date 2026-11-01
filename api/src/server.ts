@@ -1,6 +1,7 @@
 import { createClient } from '@libsql/client';
 import { serve } from '@hono/node-server';
 import { createApp } from './app';
+import { createFirebaseImageUploader } from './firebaseImages';
 
 function required(name: string): string {
   const value = process.env[name];
@@ -19,6 +20,11 @@ const app = createApp({
     authToken: required('TURSO_AUTH_TOKEN'),
   }),
   jwtSecret,
+  ...(process.env.FIREBASE_STORAGE_BUCKET && {
+    uploadImage: createFirebaseImageUploader(
+      process.env.FIREBASE_STORAGE_BUCKET,
+    ),
+  }),
   logger: (line) => console.log(line),
   trustProxy: process.env.TRUST_PROXY === 'true',
   allowedOrigins: (process.env.ALLOWED_ORIGINS ?? '')

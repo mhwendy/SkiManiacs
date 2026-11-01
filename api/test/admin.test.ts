@@ -88,6 +88,7 @@ describe('admin authorization', () => {
       ['POST', '/offers', OFFER],
       ['PUT', '/offers/1', OFFER],
       ['DELETE', '/offers/1'],
+      ['POST', '/admin/offers/images'],
       ['POST', '/offers/import'],
       ['GET', '/users'],
       ['POST', '/users', { username: 'x' }],
@@ -100,6 +101,41 @@ describe('admin authorization', () => {
       const asMember = await call(method, path, { token: member, body });
       expect(asMember.status, `member ${method} ${path}`).toBe(403);
     }
+  });
+});
+
+describe('admin image uploads', () => {
+  it('stores supported image files through the configured uploader', async () => {
+    let received: { buffer: Buffer; contentType: string } | undefined;
+    app = createApp({
+      db,
+      jwtSecret: SECRET,
+      uploadImage: async (image) => {
+        received = image;
+        return 'https://storage.example/offer-images/test.png';
+      },
+    });
+    const token = await login('root');
+    const form = new FormData();
+    form.append(
+      'image',
+      new File([new Uint8Array([137, 80, 78, 71])], 'cover.png', {
+        type: 'image/png',
+      }),
+    );
+
+    const response = await app.request('/admin/offers/images', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+
+    expect(response.status).toBe(201);
+    expect(await response.json()).toEqual({
+      url: 'https://storage.example/offer-images/test.png',
+    });
+    expect(received?.contentType).toBe('image/png');
+    expect(received?.buffer).toEqual(Buffer.from([137, 80, 78, 71]));
   });
 });
 

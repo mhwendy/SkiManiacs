@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
+import { Lucide } from '@react-native-vector-icons/lucide';
 import { ImageCarousel } from '@/components/ImageCarousel';
 import {
   formatPrice,
@@ -37,11 +38,19 @@ export function OfferCard({
   favorite,
   onToggleFavorite,
 }: Props) {
-  const { t } = useTranslation();
   const theme = useAppTheme();
   const router = useRouter();
+  const { t } = useTranslation();
   const category = localize(offer.category_sr, offer.category_en, language);
   const location = localize(offer.location_sr, offer.location_en, language);
+  const metadataRow = (icon: 'map-pin' | 'calendar-days', value: string) => (
+    <View style={styles.metadataRow}>
+      <View style={styles.metadataIcon} accessible={false}>
+        <Lucide name={icon} size={16} color={theme.accentBlue} />
+      </View>
+      <Text style={{ color: theme.textSecondary }}>{value}</Text>
+    </View>
+  );
 
   let status: { label: string; color: string } | null = null;
   if (member) {
@@ -77,29 +86,26 @@ export function OfferCard({
           router.push({ pathname: '/offers/[id]', params: { id: offer.id } })
         }
       >
-        <ImageCarousel images={offerImages(offer)} />
+        <View style={styles.hero}>
+          <ImageCarousel images={offerImages(offer)} />
+          {category !== '' && (
+            <Text style={styles.category}>{category.toUpperCase()}</Text>
+          )}
+        </View>
         <View style={styles.body}>
-          <View style={styles.row}>
-            {category !== '' && (
-              <Text style={styles.category}>{category.toUpperCase()}</Text>
-            )}
-            {status && (
+          {status && (
+            <View style={styles.row}>
               <Text style={[styles.badge, { backgroundColor: status.color }]}>
                 {status.label}
               </Text>
-            )}
-          </View>
+            </View>
+          )}
           <Text style={[styles.title, { color: theme.textPrimary }]}>
             {localize(offer.title_sr, offer.title_en, language)}
           </Text>
-          {location !== '' && (
-            <Text style={{ color: theme.textSecondary }}>{location}</Text>
-          )}
-          {formatDates(offer) !== '' && (
-            <Text style={{ color: theme.textSecondary }}>
-              {formatDates(offer)}
-            </Text>
-          )}
+          {location !== '' && metadataRow('map-pin', location)}
+          {formatDates(offer) !== '' &&
+            metadataRow('calendar-days', formatDates(offer))}
           {member && (
             <Text
               style={[
@@ -135,8 +141,11 @@ export function OfferCard({
 
 const styles = StyleSheet.create({
   card: { borderRadius: 12, overflow: 'hidden', marginBottom: 16 },
+  hero: { position: 'relative' },
   body: { padding: 12, gap: 4 },
   row: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  metadataRow: { flexDirection: 'row', gap: 8, alignItems: 'center' },
+  metadataIcon: { width: 20, alignItems: 'center' },
   star: {
     position: 'absolute',
     top: 4,
@@ -148,6 +157,10 @@ const styles = StyleSheet.create({
   },
   starText: { fontSize: 28, color: colors.accentGold },
   category: {
+    position: 'absolute',
+    left: 12,
+    bottom: 12,
+    maxWidth: '75%',
     color: colors.white,
     backgroundColor: colors.navy,
     paddingHorizontal: 8,

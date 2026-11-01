@@ -10,6 +10,7 @@ import OffersScreen from '@/app/(drawer)';
 import ContactsScreen from '@/app/(drawer)/contacts';
 import TermsScreen from '@/app/(drawer)/terms';
 import OfferDetailScreen from '@/app/offers/[id]';
+import LoginScreen from '@/app/(drawer)/login';
 
 jest.mock('expo-router', () => ({
   useRouter: () => ({ push: jest.fn() }),
@@ -71,6 +72,19 @@ describe('guest offers screen', () => {
 
     await fireEvent.press(screen.getByText('Clear All'));
     expect(screen.getByText('Ski trip in the Alps')).toBeTruthy();
+  });
+});
+
+describe('login screen', () => {
+  it('toggles password masking from the visibility button', async () => {
+    useLanguageStore.getState().setLanguage('en');
+    await render(<LoginScreen />);
+
+    expect(screen.getByLabelText('Password').props.secureTextEntry).toBe(true);
+    await fireEvent.press(screen.getByLabelText('Show password'));
+    expect(screen.getByLabelText('Password').props.secureTextEntry).toBe(false);
+    await fireEvent.press(screen.getByLabelText('Hide password'));
+    expect(screen.getByLabelText('Password').props.secureTextEntry).toBe(true);
   });
 });
 

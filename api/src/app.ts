@@ -20,6 +20,10 @@ import { signToken, verifyToken } from './tokens';
 export type AppConfig = {
   db: Client;
   jwtSecret: string;
+  uploadImage?: (input: {
+    buffer: Buffer;
+    contentType: string;
+  }) => Promise<string>;
   allowedOrigins?: string[];
   // Receives one JSON line per request (no bodies, query strings or tokens).
   logger?: (line: string) => void;
@@ -179,6 +183,7 @@ export function createApp({
   trustProxy = false,
   loginMaxFailures = 10,
   requestsPerMinute = 300,
+  uploadImage,
 }: AppConfig) {
   const app = new Hono<{ Variables: Variables }>();
   const loginFailures = createRateLimiter(loginMaxFailures, 15 * 60_000);
@@ -274,9 +279,15 @@ export function createApp({
     maxSize: 1024 * 1024,
     onError: (c) => c.json({ error: 'Request too large' }, 413),
   });
+  const imageUploadLimit = bodyLimit({
+    maxSize: 10 * 1024 * 1024,
+    onError: (c) => c.json({ error: 'Request too large' }, 413),
+  });
   app.use('*', (c, next) =>
     c.req.path === '/offers/import'
       ? importLimit(c, next)
+      : c.req.path === '/admin/offers/images'
+        ? imageUploadLimit(c, next)
       : defaultLimit(c, next),
   );
 
@@ -513,6 +524,33 @@ export function createApp({
 
   const validationMessage = (error: unknown) =>
     error instanceof ValidationError ? error.message : null;
+
+  app.post('/admin/offers/images', requireUser, requireAdmin, async (c) => {
+    if (!uploadImage) {
+      return c.json({ error: 'Image storage is not configured' }, 503);
+    }
+    const form = await c.req.parseBody();
+    const image = form.image;
+    if (!(image instanceof File)) {
+      return c.json({ error: 'Select an image file' }, 400);
+    }
+    const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
+    if (!allowedTypes.has(image.type)) {
+      return c.json({ error: 'Use a JPEG, PNG, or WebP image' }, 400);
+    }
+    if (image.size === 0 || image.size > 9 * 1024 * 1024) {
+      return c.json({ error: 'Images must be smaller than 9 MB' }, 413);
+    }
+    try {
+      const url = await uploadImage({
+        buffer: Buffer.from(await image.arrayBuffer()),
+        contentType: image.type,
+      });
+      return c.json({ url }, 201);
+    } catch {
+      return c.json({ error: 'Image upload failed' }, 502);
+    }
+  });
 
   app.post('/offers', requireUser, requireAdmin, async (c) => {
     const body = await readJson(c);

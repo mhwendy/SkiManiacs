@@ -27,7 +27,7 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/skimanijaci-logo.png"
     },
     "experiments": {
       "typedRoutes": true
@@ -46,7 +46,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#0B1736"
         }
-      ]
+      ],
+      "expo-font"
     ]
   }
 }
