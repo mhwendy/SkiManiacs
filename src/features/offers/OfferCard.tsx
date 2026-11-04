@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Lucide } from '@react-native-vector-icons/lucide';
+import { CalendarDays, MapPin } from 'lucide-react-native';
 import { ImageCarousel } from '@/components/ImageCarousel';
 import {
   formatPrice,
@@ -46,7 +46,11 @@ export function OfferCard({
   const metadataRow = (icon: 'map-pin' | 'calendar-days', value: string) => (
     <View style={styles.metadataRow}>
       <View style={styles.metadataIcon} accessible={false}>
-        <Lucide name={icon} size={16} color={theme.accentBlue} />
+        {icon === 'map-pin' ? (
+          <MapPin size={16} color={theme.accentBlue} />
+        ) : (
+          <CalendarDays size={16} color={theme.accentBlue} />
+        )}
       </View>
       <Text style={{ color: theme.textSecondary }}>{value}</Text>
     </View>

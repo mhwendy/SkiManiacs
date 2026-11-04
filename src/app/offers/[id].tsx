@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import { useLocalSearchParams } from 'expo-router';
 import { useTranslation } from 'react-i18next';
-import { Lucide } from '@react-native-vector-icons/lucide';
+import { CalendarDays, MapPin, Tag } from 'lucide-react-native';
 import { ImageCarousel } from '@/components/ImageCarousel';
 import { formatPrice, isAvailable, localize } from '@/domain/offers';
 import type { Offer } from '@/domain/types';
@@ -75,19 +75,23 @@ export default function OfferDetailScreen() {
     label: string,
     value: string,
     icon?: 'tag' | 'map-pin' | 'calendar-days',
-  ) => (
-    <View style={styles.row} key={label}>
-      <View style={styles.rowLabel}>
-        {icon && (
-          <View style={styles.rowIcon} accessible={false}>
-            <Lucide name={icon} size={20} color={theme.accentBlue} />
-          </View>
-        )}
-        <Text style={{ color: theme.textSecondary }}>{label}</Text>
+  ) => {
+    const Icon = icon === 'tag' ? Tag : icon === 'map-pin' ? MapPin : CalendarDays;
+
+    return (
+      <View style={styles.row} key={label}>
+        <View style={styles.rowLabel}>
+          {icon && (
+            <View style={styles.rowIcon} accessible={false}>
+              <Icon size={20} color={theme.accentBlue} />
+            </View>
+          )}
+          <Text style={{ color: theme.textSecondary }}>{label}</Text>
+        </View>
+        <Text style={[styles.value, { color: theme.textPrimary }]}>{value}</Text>
       </View>
-      <Text style={[styles.value, { color: theme.textPrimary }]}>{value}</Text>
-    </View>
-  );
+    );
+  };
 
   const onFavoritePress = () => {
     if (!member) {

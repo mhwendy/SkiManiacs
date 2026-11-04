@@ -6,6 +6,8 @@
     "retry": "Pokušaj ponovo"
   },
   "navigation": {
+    "openMenu": "Otvori navigacioni meni",
+    "back": "Nazad",
     "home": "Početna",
     "offers": "Ponude",
     "favorites": "Omiljeno",

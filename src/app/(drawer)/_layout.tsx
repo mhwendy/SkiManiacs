@@ -1,28 +1,57 @@
 import { Drawer } from 'expo-router/drawer';
-import { useColorScheme } from 'react-native';
+import { Pressable } from 'react-native';
 import { useTranslation } from 'react-i18next';
-import { Lucide } from '@react-native-vector-icons/lucide';
+import {
+  Contact,
+  FileText,
+  House,
+  LogIn,
+  LogOut,
+  Menu,
+  ShieldCheck,
+  Star,
+  UserRound,
+} from 'lucide-react-native';
 import { DrawerContent } from '@/components/DrawerContent';
 import { useAuthStore } from '@/state/authStore';
 import { colors } from '@/theme/colors';
+import { useAppColorScheme } from '@/theme/useAppTheme';
 
 export default function DrawerLayout() {
   const { t } = useTranslation();
   const user = useAuthStore((state) => state.user);
-  const colorScheme = useColorScheme();
+  const colorScheme = useAppColorScheme();
   const theme = colorScheme === 'dark' ? colors.dark : colors.light;
 
   return (
     <Drawer
       drawerContent={(props) => <DrawerContent {...props} />}
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
         headerStyle: { backgroundColor: theme.surface },
         headerTintColor: theme.textPrimary,
+        headerLeft: ({ tintColor }) => (
+          <Pressable
+            accessibilityRole="button"
+            accessibilityLabel={t('navigation.openMenu')}
+            onPress={() => navigation.toggleDrawer()}
+            style={{
+              width: 44,
+              height: 44,
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Menu
+              color={tintColor ?? theme.textPrimary}
+              size={24}
+            />
+          </Pressable>
+        ),
         drawerActiveTintColor: theme.textPrimary,
         drawerInactiveTintColor: theme.textSecondary,
         drawerStyle: { backgroundColor: theme.surface },
         sceneStyle: { backgroundColor: theme.background },
-      }}
+      })}
     >
       <Drawer.Screen
         name="index"
@@ -30,7 +59,7 @@ export default function DrawerLayout() {
           drawerLabel: t('navigation.home'),
           title: t('offers.title'),
           drawerIcon: ({ color, size }) => (
-            <Lucide name="house" color={color} size={size} />
+            <House color={color} size={size} />
           ),
         }}
       />
@@ -41,7 +70,7 @@ export default function DrawerLayout() {
           title: t('navigation.favorites'),
           drawerItemStyle: user ? undefined : { display: 'none' },
           drawerIcon: ({ color, size }) => (
-            <Lucide name="star" color={color} size={size} />
+            <Star color={color} size={size} />
           ),
         }}
       />
@@ -52,7 +81,7 @@ export default function DrawerLayout() {
           title: t('navigation.login'),
           drawerItemStyle: user ? { display: 'none' } : undefined,
           drawerIcon: ({ color, size }) => (
-            <Lucide name="log-in" color={color} size={size} />
+            <LogIn color={color} size={size} />
           ),
         }}
       />
@@ -62,7 +91,7 @@ export default function DrawerLayout() {
           drawerLabel: t('navigation.contacts'),
           title: t('navigation.contacts'),
           drawerIcon: ({ color, size }) => (
-            <Lucide name="contact" color={color} size={size} />
+            <Contact color={color} size={size} />
           ),
         }}
       />
@@ -74,7 +103,7 @@ export default function DrawerLayout() {
           drawerItemStyle:
             user && !user.isAdmin ? undefined : { display: 'none' },
           drawerIcon: ({ color, size }) => (
-            <Lucide name="user-round" color={color} size={size} />
+            <UserRound color={color} size={size} />
           ),
         }}
       />
@@ -85,7 +114,7 @@ export default function DrawerLayout() {
           title: t('navigation.logout'),
           drawerItemStyle: user ? undefined : { display: 'none' },
           drawerIcon: ({ color, size }) => (
-            <Lucide name="log-out" color={color} size={size} />
+            <LogOut color={color} size={size} />
           ),
         }}
       />
@@ -95,7 +124,7 @@ export default function DrawerLayout() {
           drawerLabel: t('navigation.terms'),
           title: t('navigation.terms'),
           drawerIcon: ({ color, size }) => (
-            <Lucide name="file-text" color={color} size={size} />
+            <FileText color={color} size={size} />
           ),
         }}
       />
@@ -105,7 +134,7 @@ export default function DrawerLayout() {
           drawerLabel: t('navigation.privacy'),
           title: t('navigation.privacy'),
           drawerIcon: ({ color, size }) => (
-            <Lucide name="shield-check" color={color} size={size} />
+            <ShieldCheck color={color} size={size} />
           ),
         }}
       />

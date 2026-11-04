@@ -6,16 +6,16 @@ import { cors } from 'hono/cors';
 import { HTTPException } from 'hono/http-exception';
 import { secureHeaders } from 'hono/secure-headers';
 import { getConnInfo } from '@hono/node-server/conninfo';
-import { CSV_COLUMNS, parseCsv } from './csv';
-import { ValidationError, parseOfferInput } from './offerInput';
-import { createRateLimiter } from './rateLimit';
+import { CSV_COLUMNS, parseCsv } from './csv.js';
+import { ValidationError, parseOfferInput } from './offerInput.js';
+import { createRateLimiter } from './rateLimit.js';
 import {
   hashPassword,
   validateEmail,
   validatePassword,
   verifyPassword,
-} from './passwords';
-import { signToken, verifyToken } from './tokens';
+} from './passwords.js';
+import { signToken, verifyToken } from './tokens.js';
 
 export type AppConfig = {
   db: Client;
@@ -173,6 +173,25 @@ async function readJson(c: Context): Promise<Record<string, unknown> | null> {
 function optionalString(value: unknown): string | undefined | null {
   if (value === undefined) return undefined;
   return typeof value === 'string' ? value.trim() : null;
+}
+
+function matchesImageSignature(buffer: Buffer, contentType: string): boolean {
+  if (contentType === 'image/jpeg') {
+    return buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff;
+  }
+  if (contentType === 'image/png') {
+    return buffer.subarray(0, 8).equals(
+      Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
+    );
+  }
+  if (contentType === 'image/webp') {
+    return (
+      buffer.length >= 12 &&
+      buffer.toString('ascii', 0, 4) === 'RIFF' &&
+      buffer.toString('ascii', 8, 12) === 'WEBP'
+    );
+  }
+  return false;
 }
 
 export function createApp({
@@ -542,8 +561,12 @@ export function createApp({
       return c.json({ error: 'Images must be smaller than 9 MB' }, 413);
     }
     try {
+      const buffer = Buffer.from(await image.arrayBuffer());
+      if (!matchesImageSignature(buffer, image.type)) {
+        return c.json({ error: 'Image content does not match its file type' }, 400);
+      }
       const url = await uploadImage({
-        buffer: Buffer.from(await image.arrayBuffer()),
+        buffer,
         contentType: image.type,
       });
       return c.json({ url }, 201);

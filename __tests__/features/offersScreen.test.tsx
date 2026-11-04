@@ -6,6 +6,7 @@ import '@/i18n';
 import { useLanguageStore } from '@/state/languageStore';
 import { useAuthStore } from '@/state/authStore';
 import { colors } from '@/theme/colors';
+import { FilterSheet } from '@/features/offers/FilterSheet';
 import OffersScreen from '@/app/(drawer)';
 import ContactsScreen from '@/app/(drawer)/contacts';
 import TermsScreen from '@/app/(drawer)/terms';
@@ -17,6 +18,29 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 'offer001' }),
 }));
 jest.mock('expo-image', () => ({ Image: 'View' }));
+
+describe('filter sheet', () => {
+  it('closes when the backdrop is pressed', async () => {
+    useLanguageStore.getState().setLanguage('en');
+    const onClose = jest.fn();
+
+    await render(
+      <FilterSheet
+        member={false}
+        filter={{}}
+        sort="date"
+        categories={[]}
+        locations={[]}
+        onApply={jest.fn()}
+        onClose={onClose}
+      />,
+    );
+
+    await fireEvent.press(screen.getByLabelText('Close'));
+
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+});
 
 function renderWithQuery(ui: React.ReactElement) {
   const client = new QueryClient({

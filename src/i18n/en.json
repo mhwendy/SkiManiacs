@@ -6,6 +6,8 @@
     "retry": "Try again"
   },
   "navigation": {
+    "openMenu": "Open navigation menu",
+    "back": "Go back",
     "home": "Home",
     "offers": "Offers",
     "favorites": "Favorites",

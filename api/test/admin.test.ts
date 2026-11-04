@@ -119,9 +119,13 @@ describe('admin image uploads', () => {
     const form = new FormData();
     form.append(
       'image',
-      new File([new Uint8Array([137, 80, 78, 71])], 'cover.png', {
+      new File(
+        [new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10])],
+        'cover.png',
+        {
         type: 'image/png',
-      }),
+        },
+      ),
     );
 
     const response = await app.request('/admin/offers/images', {
@@ -135,7 +139,39 @@ describe('admin image uploads', () => {
       url: 'https://storage.example/offer-images/test.png',
     });
     expect(received?.contentType).toBe('image/png');
-    expect(received?.buffer).toEqual(Buffer.from([137, 80, 78, 71]));
+    expect(received?.buffer).toEqual(
+      Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]),
+    );
+  });
+
+  it('rejects file content that does not match its declared image type', async () => {
+    let uploaded = false;
+    app = createApp({
+      db,
+      jwtSecret: SECRET,
+      uploadImage: async () => {
+        uploaded = true;
+        return 'https://storage.example/image.png';
+      },
+    });
+    const token = await login('root');
+    const form = new FormData();
+    form.append(
+      'image',
+      new File(['not an image'], 'cover.png', { type: 'image/png' }),
+    );
+
+    const response = await app.request('/admin/offers/images', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${token}` },
+      body: form,
+    });
+
+    expect(response.status).toBe(400);
+    expect(await response.json()).toEqual({
+      error: 'Image content does not match its file type',
+    });
+    expect(uploaded).toBe(false);
   });
 });
 

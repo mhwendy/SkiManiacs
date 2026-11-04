@@ -108,6 +108,12 @@ export function FilterSheet({
   return (
     <Modal visible transparent animationType="slide" onRequestClose={onClose}>
       <View style={styles.backdrop}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={t('detail.close')}
+          onPress={onClose}
+          style={StyleSheet.absoluteFill}
+        />
         <View style={[styles.sheet, { backgroundColor: theme.surface }]}>
           <ScrollView>
             <Text style={[styles.heading, { color: theme.textPrimary }]}>

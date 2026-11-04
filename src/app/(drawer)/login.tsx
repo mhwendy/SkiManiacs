@@ -10,7 +10,7 @@ import {
   View,
 } from 'react-native';
 import { Image } from 'expo-image';
-import { Lucide } from '@react-native-vector-icons/lucide';
+import { Eye, EyeOff } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 import { useTranslation } from 'react-i18next';
 import { authErrorKey } from '@/features/auth/errors';
@@ -101,11 +101,11 @@ export default function LoginScreen() {
           onPress={() => setPasswordVisible((visible) => !visible)}
           style={styles.passwordVisibilityButton}
         >
-          <Lucide
-            name={passwordVisible ? 'eye-off' : 'eye'}
-            size={20}
-            color={theme.textSecondary}
-          />
+          {passwordVisible ? (
+            <EyeOff size={20} color={theme.textSecondary} />
+          ) : (
+            <Eye size={20} color={theme.textSecondary} />
+          )}
         </Pressable>
       </View>
       {touched && missing && (

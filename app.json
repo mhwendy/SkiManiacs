@@ -27,6 +27,7 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
+      "output": "static",
       "favicon": "./assets/skimanijaci-logo.png"
     },
     "experiments": {

@@ -24,3 +24,21 @@ jest.mock('expo-secure-store', () => {
     },
   };
 });
+
+jest.mock('lucide-react-native', () => ({
+  ArrowLeft: 'View',
+  CalendarDays: 'View',
+  Contact: 'View',
+  Eye: 'View',
+  EyeOff: 'View',
+  FileText: 'View',
+  House: 'View',
+  LogIn: 'View',
+  LogOut: 'View',
+  MapPin: 'View',
+  Menu: 'View',
+  ShieldCheck: 'View',
+  Star: 'View',
+  Tag: 'View',
+  UserRound: 'View',
+}));
